@@ -1,12 +1,12 @@
 package top.testops.my_api_test.dao.been;
 
 /**
-  * @ClassName ErrorBeen
+  * @ClassName StandardBeen
   * @Description TODO
   * @author carson
   * @date 2020/3/12
 **/
-public class ErrorBeen {
+public class StandardBeen {
 
     /**
      * code : 401
@@ -18,7 +18,7 @@ public class ErrorBeen {
 
     @Override
     public String toString() {
-        return "ErrorBeen{" +
+        return "StandardBeen{" +
                 "code='" + code + '\'' +
                 ", message='" + message + '\'' +
                 '}';

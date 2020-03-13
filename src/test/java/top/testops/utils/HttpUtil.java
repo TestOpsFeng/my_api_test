@@ -27,7 +27,7 @@ import java.security.NoSuchAlgorithmException;
   * @date 2020/3/12
 **/
 public class HttpUtil {
-    public static Boolean isUseSSR = false;
+    public static Boolean isUserProxy = true;
 
     public static CloseableHttpClient creatClient() {
         return creatIgnoreVerifyClient();
@@ -66,7 +66,7 @@ public class HttpUtil {
     }
     public static CloseableHttpClient creatIgnoreVerifyClient() {
         CloseableHttpClient client = null;
-        if (isUseSSR) {
+        if (isUserProxy) {
             try {
                 SSLContext ignoreVerifySSL = null;
                 ignoreVerifySSL = createIgnoreVerifySSL();
@@ -75,7 +75,7 @@ public class HttpUtil {
                         .register("https", new SSLConnectionSocketFactory(ignoreVerifySSL)).build();
                 PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
                 HttpClients.custom().setConnectionManager(connManager);
-                client = proxy("127.0.0.1", 2345).setConnectionManager(connManager).build();
+                client = proxy("127.0.0.1", 11111).setConnectionManager(connManager).build();
             } catch (NoSuchAlgorithmException | KeyManagementException e) {
                 e.printStackTrace();
             }

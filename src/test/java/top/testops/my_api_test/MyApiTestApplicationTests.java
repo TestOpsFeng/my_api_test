@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
-import top.testops.my_api_test.dao.been.ErrorBeen;
+import top.testops.my_api_test.dao.been.StandardBeen;
 import top.testops.my_api_test.service.UserService;
 import top.testops.utils.HttpUtil;
 
@@ -31,8 +31,8 @@ class MyApiTestApplicationTests extends AbstractTestNGSpringContextTests {
             CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
             String resultJson = EntityUtils.toString(httpResponse.getEntity());
 //            Rlog.info("mylog" + resultJson);
-            ErrorBeen errorBeen = JSON.parseObject(resultJson, ErrorBeen.class);
-//            Rlog.info("been: " + errorBeen.toString());
+            StandardBeen standardBeen = JSON.parseObject(resultJson, StandardBeen.class);
+//            Rlog.info("been: " + standardBeen.toString());
             Assert.assertEquals("a","b");
         } catch (IOException e) {
             e.printStackTrace();
