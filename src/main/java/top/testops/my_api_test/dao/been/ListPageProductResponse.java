@@ -2,12 +2,6 @@ package top.testops.my_api_test.dao.been;
 
 import java.util.List;
 
-/**
-  * @ClassName ListPageProductResponse
-  * @Description TODO
-  * @author carson
-  * @date 2020/3/17
-**/
 public class ListPageProductResponse {
 
     /**

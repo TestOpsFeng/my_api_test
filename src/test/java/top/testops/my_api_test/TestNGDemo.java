@@ -18,10 +18,10 @@ import top.testops.my_api_test.dao.AppDao;
 import top.testops.my_api_test.dao.been.*;
 import top.testops.my_api_test.dao.been.body.*;
 import top.testops.my_api_test.listen.ExtentTestNGIReporterListener;
-import top.testops.my_api_test.service.UserService;
 import top.testops.utils.APIUtil;
 import top.testops.utils.POIUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -35,8 +35,6 @@ import java.util.List;
 public class TestNGDemo extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    private UserService userService;
-    @Autowired()
     private Logger log;
     @Autowired
     private AppDao appDao;
@@ -63,6 +61,10 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         Object Actual = APIUtil.parseExpectedField(listPageEmployees.getExpectedField(), pageEmployeesBeen);
         Assert.assertEquals(Actual, listPageEmployees.getExpectedValue());
     }
+    // 添加保险产品
+    // 添加投保渠道
+    // 添加流量渠道
+    // 添加员工日程
 
     @Test(description = "获取用户列表")
     public void listPageUserInfo_test() {
@@ -74,7 +76,6 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         Object Actual = APIUtil.parseExpectedField(listPageUserInfo.getExpectedField(), pageUserInfo);
         Assert.assertEquals(Actual, listPageUserInfo.getExpectedValue());
     }
-
 
     @Test(description = "FNS手动创建预约及后续场景")
     public void main_FNS_Scenes() {
@@ -104,6 +105,9 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         addFollowUpRecordBody.setRemark("脚本自动流转跟进记录至『待一促』");
 
         addFollowUpRecord(addFollowUpRecordBody);
+
+        //添加员工日程
+        addPlanSchedule(userId);
 
         // 流转至待成交
         addFollowUpRecordBody.setRemark("脚本自动流转跟进记录至『待成交』");
@@ -161,6 +165,31 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         addFollowUpRecord(addFollowUpRecordBody);
     }
 
+    private void addPlanSchedule(Integer userId){
+        DataBeen dataBeen = appDao.findByTag("addPlanSchedule");
+        HttpPost httpPost = APIUtil.createHttpPost(dataBeen.getUrl());
+        String body = dataBeen.getBody();
+        AddPlanScheduleBody addPlanScheduleBody = JSON.parseObject(body, AddPlanScheduleBody.class);
+        addPlanScheduleBody.setStartTime(radomDate());
+        addPlanScheduleBody.setRemark("脚本自动添加");
+        addPlanScheduleBody.setUserId(userId);
+        Object json = JSON.toJSONString(addPlanScheduleBody, SerializerFeature.WriteMapNullValue);
+        APIUtil.setBody(json.toString(), httpPost);
+        CloseableHttpResponse httpResponse = APIUtil.exec(httpPost);
+        StandardBeen standardBeen = APIUtil.parseResponse(httpResponse, StandardBeen.class);
+        Object Actual = APIUtil.parseExpectedField(dataBeen.getExpectedField(), standardBeen);
+        Assert.assertEquals(Actual.toString(), dataBeen.getExpectedValue());
+    }
+    //获取最近一年的随机时间
+    private String radomDate(){
+        long time = RandomUtils.nextLong(1552807590000l, 1584429990073l);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        return df.format(time);// new Date()为获取当前系统时间，也可使用当前时间戳
+    }
+
+    /**
+     * 添加保险产品
+     */
     private void addUserInsurancePlanDetail(Integer userId, Integer familyId, Integer planId, Integer insuranceType) {
         DataBeen dataBeen = appDao.findByTag("addUserInsurancePlanDetail");
         HttpPost httpPost = APIUtil.createHttpPost(dataBeen.getUrl());
@@ -372,6 +401,10 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(Actual, dataBeen.getExpectedValue());
     }
 
+    /**
+     * &#x6279;&#x91cf;&#x4e0a;&#x4f20;&#x6295;&#x4fdd;&#x8ba2;&#x5355;
+     * @return
+     */
     private String batchOrder() {
         String fileName = "ready.xlsx";
         DataBeen dataBeen = appDao.findByTag("batchOrder");
@@ -385,7 +418,6 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         POIUtils.setOrderNumber(String.valueOf(RandomUtils.nextInt(1000000000, 1999999999)));
         return orderNumber;
     }
-
 
     // 添加跟进记录
     private void addFollowUpRecord(AddFollowUpRecordBody addFollowUpRecordBody) {
@@ -476,7 +508,6 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         Object Actual = APIUtil.parseExpectedField(dataBeen.getExpectedField(), standardBeen);
         Assert.assertEquals(Actual, dataBeen.getExpectedValue());
     }
-
 
     @BeforeClass
     private void login() {

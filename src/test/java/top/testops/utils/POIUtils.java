@@ -21,7 +21,7 @@ import java.util.*;
  * @date 2020/3/16
  **/
 public class POIUtils {
-    public static void setOrderNumber(String number){
+    public static void setOrderNumber(String number) {
 
         File file = new File("E:\\IdeaProject\\my_api_test\\src\\main\\resources\\excel\\temp.xlsx");
         Workbook workbook = null;
@@ -29,7 +29,7 @@ public class POIUtils {
             workbook = WorkbookFactory.create(file);
             Sheet sheet = workbook.getSheetAt(0);
             Cell cell = sheet.getRow(1).getCell(0);
-            replaceCellValue(cell,number);
+            replaceCellValue(cell, number);
             File xlsFile = new File("E:\\IdeaProject\\my_api_test\\src\\main\\resources\\excel\\ready.xlsx");
             workbook.write(new FileOutputStream(xlsFile));
             workbook.close();
@@ -38,7 +38,7 @@ public class POIUtils {
         }
     }
 
-    public static String getOrderNumber(){
+    public static String getOrderNumber() {
         File file = new File("E:\\IdeaProject\\my_api_test\\src\\main\\resources\\excel\\temp.xlsx");
         Workbook workbook = null;
         try {
@@ -53,11 +53,16 @@ public class POIUtils {
         }
         return "";
     }
+
     public static void replaceCellValue(Cell cell, Object value) {
         String val = value != null ? String.valueOf(value) : "";
         cell.setCellValue(val);
     }
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
+        System.out.println("中文测试");
+        long time = RandomUtils.nextLong(1552807590000l, 1584429990073l);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        System.out.println("date: " + df.format(time));// new Date()为获取当前系统时间，也可使用当前时间戳
     }
 }

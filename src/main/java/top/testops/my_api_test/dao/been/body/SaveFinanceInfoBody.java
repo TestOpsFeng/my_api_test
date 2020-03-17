@@ -2,21 +2,7 @@ package top.testops.my_api_test.dao.been.body;
 
 import java.util.List;
 
-/**
-  * @ClassName SaveFinanceInfoBody
-  * @Description TODO
-  * @author carson
-  * @date 2020/3/17
-**/
 public class SaveFinanceInfoBody {
-
-    /**
-     * familyFinanceInfo : {"id":null,"userId":380,"sirAnnualIncome":30,"madamAnnualIncome":"15","annualIncome":45,"cash":"5","fund":"6","stock":"7","otherInvest":"8","liquidAssets":26,"investAnnualIncome":"9","sirIncomeRate":67,"madamIncomeRate":33,"overseasAssetsSet":null,"hongKongInsuranceSet":null,"mortgage":"10","carLoan":"5","otherDebt":"0","totalDebt":15,"mortgagePayment":"1","carPayment":"0.5","annualMortgagePayment":18,"monthLivingExpense":"1","livingExpense":12,"alimonyPayment":"1","alimonyLimit":"10","alimonyAmount":10,"totalFamilyIncome":54,"totalFamilyExpense":32.5,"totalFamilyBalance":21.5,"childrenEducationAnnualBudget":1.5,"childrenEducationTotalBudget":13.5}
-     * educationInfos : [{"id":null,"userId":380,"familyId":285,"familyName":"儿子","annualBudget":1.5,"totalBudget":13.5,"method":1,"graduateYear":"9","createTime":null,"updateTime":null}]
-     * insuranceProposal : {"id":null,"userId":380,"sirTreatment":40,"sirReimbursement":20,"sirDelayYear":5,"sirRehabilitationExpenses":20,"sirCriticalIllnessInsuranceCalcAmount":149,"sirCriticalIllnessInsuranceAmount":"400000","madamTreatment":40,"madamReimbursement":20,"madamDelayYear":5,"madamRehabilitationExpenses":20,"madamCriticalIllnessInsuranceCalcAmount":94,"madamCriticalIllnessInsuranceAmount":"4000000","extraYear":5,"familyTotalBurden":99,"partialLiquidAssets":0,"familyLifeInsuranceCalcAmount":99,"sirLifeInsuranceCalcAmount":66,"sirLifeInsuranceAmount":"70","madamLifeInsuranceCalcAmount":33,"madamLifeInsuranceAmount":"40","insuranceBudget":"100000","familyPremiumRate":15,"familyCalcPremium":32250,"sirPremiumRate":100,"sirCalcPremium":21608,"sirPremium":"40000","madamPremiumRate":100,"madamCalcPremium":10643,"madamPremium":"20000","createTime":null,"updateTime":null}
-     * hasSir : null
-     * hasMadam : null
-     */
 
     private FamilyFinanceInfoBean familyFinanceInfo;
     private InsuranceProposalBean insuranceProposal;
