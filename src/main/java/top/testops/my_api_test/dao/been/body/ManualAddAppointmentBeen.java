@@ -11,12 +11,11 @@ public class ManualAddAppointmentBeen {
     /**
      * realName : 脚本自动生成
      * nickName : AutoTest
-     * mobile : 13160691333
+     * mobile : 13403685845
      * channel : 4
      * amount : 1
-     * plannerId : 42
-     * fnaTime : 2020-03-13 00:00:00
-     * gender : 1
+     * plannerId : null
+     * gender : null
      */
 
     private String realName;
@@ -24,9 +23,8 @@ public class ManualAddAppointmentBeen {
     private String mobile;
     private int channel;
     private int amount;
-    private int plannerId;
-    private String fnaTime;
-    private int gender;
+    private Object plannerId;
+    private Object gender;
 
     public String getRealName() {
         return realName;
@@ -68,27 +66,19 @@ public class ManualAddAppointmentBeen {
         this.amount = amount;
     }
 
-    public int getPlannerId() {
+    public Object getPlannerId() {
         return plannerId;
     }
 
-    public void setPlannerId(int plannerId) {
+    public void setPlannerId(Object plannerId) {
         this.plannerId = plannerId;
     }
 
-    public String getFnaTime() {
-        return fnaTime;
-    }
-
-    public void setFnaTime(String fnaTime) {
-        this.fnaTime = fnaTime;
-    }
-
-    public int getGender() {
+    public Object getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(Object gender) {
         this.gender = gender;
     }
 }

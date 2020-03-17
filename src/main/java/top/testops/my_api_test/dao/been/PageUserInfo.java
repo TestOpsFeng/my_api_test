@@ -20,6 +20,15 @@ public class PageUserInfo {
     private String message;
     private DataBean data;
 
+    @Override
+    public String toString() {
+        return "PageUserInfo{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                '}';
+    }
+
     public int getCode() {
         return code;
     }

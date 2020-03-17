@@ -4,18 +4,28 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.web.client.RestTemplate;
 import org.testng.Reporter;
+import top.testops.my_api_test.dao.been.DataBeen;
 import top.testops.my_api_test.dao.been.StandardBeen;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * @author carson
@@ -50,6 +60,22 @@ public class APIUtil {
         return httpPost;
     }
 
+    /**
+     *
+     */
+    public static HttpPost createUploadFileHttpPost(String url,String filePath,String fileName) {
+        Reporter.log("POST " + url);
+        HttpPost httpPost = new HttpPost("http://testmanage.7tao.net:8082/app/fileUpload/batchOrder");
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+        multipartEntityBuilder.setCharset(Charset.forName("UTF-8"));
+        File file = new File(filePath);
+        Reporter.log("uploadPath：" + filePath);
+        multipartEntityBuilder.addBinaryBody("file",file, ContentType
+                .create("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),fileName);
+        HttpEntity httpEntity = multipartEntityBuilder.build();
+        httpPost.setEntity(httpEntity);
+        return httpPost;
+    }
     public static void setBody(String json, HttpPost post) {
         Reporter.log("Body:" + json);
         StringEntity stringEntity = new StringEntity(json, "UTF-8");
@@ -91,6 +117,7 @@ public class APIUtil {
         }
         return null;
     }
+
 
 
     public static Object parseExpectedField(String field, Object standardBeen) {
