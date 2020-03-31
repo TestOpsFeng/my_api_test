@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
-  * @ClassName ExtentTestNGIReporterListener
+  * @ClassName UIExtentTestNGIReporterListener
   * @Description TODO
   * @author carson
   * @date 2020/3/12
@@ -29,7 +29,7 @@ public class ExtentTestNGIReporterListener implements IReporter {
 
 
     private static final String OUTPUT_FOLDER = System.getProperty("user.dir") + "\\logs\\extend-report\\";
-    private static final String FILE_NAME = "extend.html";
+    private static final String FILE_NAME = "API-extend.html";
     private static final String DocumentTitle = "API测试";
     private static final String ReportName = "API测试";
     private ExtentReports extent;

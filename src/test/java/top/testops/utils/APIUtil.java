@@ -17,7 +17,14 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.testng.Reporter;
 import top.testops.my_api_test.dao.been.DataBeen;
@@ -25,6 +32,9 @@ import top.testops.my_api_test.dao.been.StandardBeen;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.nio.charset.Charset;
 
 /**
@@ -35,6 +45,17 @@ import java.nio.charset.Charset;
  **/
 public class APIUtil {
     public static CloseableHttpClient httpClient = HttpUtil.creatClient();
+    private static Logger log;
+    static {
+        Logger mylog = LoggerFactory.getLogger("Log");
+        log = (Logger) Proxy.newProxyInstance(mylog.getClass().getClassLoader(), mylog.getClass().getInterfaces(), new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                Reporter.log(args[0].toString());
+                return method.invoke(mylog, args);
+            }
+        });
+    }
 
     /**
      * 1、创建get请求
@@ -43,7 +64,7 @@ public class APIUtil {
      * @return
      */
     public static HttpGet createHttpGet(String url) {
-        Reporter.log("GET " + url);
+        log.info("GET " + url);
         return new HttpGet(url);
     }
 
@@ -54,7 +75,8 @@ public class APIUtil {
      * @return
      */
     public static HttpPost createHttpPost(String url) {
-        Reporter.log("POST " + url);
+        log.info("-----------------------------------------------------------");
+        log.info("POST " + url);
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
         return httpPost;
@@ -64,12 +86,12 @@ public class APIUtil {
      *
      */
     public static HttpPost createUploadFileHttpPost(String url,String filePath,String fileName) {
-        Reporter.log("POST " + url);
-        HttpPost httpPost = new HttpPost("http://testmanage.7tao.net:8082/app/fileUpload/batchOrder");
+        log.info("POST " + url);
+        HttpPost httpPost = new HttpPost(url);
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
         multipartEntityBuilder.setCharset(Charset.forName("UTF-8"));
         File file = new File(filePath);
-        Reporter.log("uploadPath：" + filePath);
+        log.info("uploadPath：" + filePath);
         multipartEntityBuilder.addBinaryBody("file",file, ContentType
                 .create("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),fileName);
         HttpEntity httpEntity = multipartEntityBuilder.build();
@@ -77,7 +99,7 @@ public class APIUtil {
         return httpPost;
     }
     public static void setBody(String json, HttpPost post) {
-        Reporter.log("Body:" + json);
+        log.info("Body:" + json);
         StringEntity stringEntity = new StringEntity(json, "UTF-8");
         post.setEntity(stringEntity);
     }
@@ -110,7 +132,7 @@ public class APIUtil {
         try {
             resultJson = EntityUtils.toString(response.getEntity());
             T object = JSON.parseObject(resultJson, clazz);
-            Reporter.log("Response: " + resultJson);
+            log.info("Response: " + resultJson);
             return object;
         } catch (IOException e) {
             e.printStackTrace();
@@ -139,8 +161,8 @@ public class APIUtil {
         } else {
             result = jsonObject.get(field);
         }
-        Reporter.log("expectField: " + field);
-        Reporter.log("actualValue: " + result);
+        log.info("expectField: " + field);
+        log.info("actualValue: " + result);
         return result;
     }
 }

@@ -7,7 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
-  * @ClassName AnnotationTransformer
+  * @ClassName UIAnnotationTransformer
   * @Description TODO
   * @author carson
   * @date 2020/3/12

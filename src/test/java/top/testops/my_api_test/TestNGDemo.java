@@ -34,8 +34,7 @@ import java.util.List;
 @Listeners(ExtentTestNGIReporterListener.class)
 public class TestNGDemo extends AbstractTestNGSpringContextTests {
 
-    @Autowired
-    private Logger log;
+
     @Autowired
     private AppDao appDao;
 
@@ -86,7 +85,6 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         PageAppointmentRecordResponse pageAppointmentRecordResponse = listPageAppointmentRecord();
         int appointmentId = pageAppointmentRecordResponse.getData().getList().get(0).getId();
         int userId = pageAppointmentRecordResponse.getData().getList().get(0).getUserId();
-
 
         // 分配规划师
         assignPlanner(appointmentId);
@@ -149,6 +147,9 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         //儿子
         addUserInsurancePlanDetail(userId, sonId, planId, 4);
 
+        //分享保险方案
+        shareUserInsurancePlan(planId);
+
         //批量导入投保订单
         String policyNo = batchOrder();
 
@@ -157,15 +158,34 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         //确认对应的客户
         confirmUser(orderNo, userId);
 
-        // 流转至待成交
+
+        // 流转至完全成交
         addFollowUpRecordBody.setRemark("脚本自动流转跟进记录至『完全成交』");
         addFollowUpRecordBody.setRecordState("6");
         addFollowUpRecordBody.setUserLevel("S");
 
         addFollowUpRecord(addFollowUpRecordBody);
+
     }
 
-    private void addPlanSchedule(Integer userId){
+    private void shareUserInsurancePlan(Integer planId) {
+        DataBeen dataBeen = appDao.findByTag("shareUserInsurancePlan");
+        HttpPost httpPost = APIUtil.createHttpPost(dataBeen.getUrl());
+        String body = dataBeen.getBody();
+        ShareUserInsurancePlanBody shareUserInsurancePlanBody = JSON.parseObject(body, ShareUserInsurancePlanBody.class);
+
+        shareUserInsurancePlanBody.setId(planId);
+        Object json = JSON.toJSONString(shareUserInsurancePlanBody, SerializerFeature.WriteMapNullValue);
+        APIUtil.setBody(json.toString(), httpPost);
+        CloseableHttpResponse httpResponse = APIUtil.exec(httpPost);
+        ShareUserInsurancePlanResponse shareUserInsurancePlanResponse = APIUtil.parseResponse(httpResponse, ShareUserInsurancePlanResponse.class);
+        Object Actual = APIUtil.parseExpectedField(dataBeen.getExpectedField(), shareUserInsurancePlanResponse);
+        Assert.assertEquals(Actual.toString(), dataBeen.getExpectedValue());
+        Assert.assertNotNull(shareUserInsurancePlanResponse.getData().getUrl());
+        Assert.assertNotNull(shareUserInsurancePlanResponse.getData().getQrImg());
+    }
+
+    private void addPlanSchedule(Integer userId) {
         DataBeen dataBeen = appDao.findByTag("addPlanSchedule");
         HttpPost httpPost = APIUtil.createHttpPost(dataBeen.getUrl());
         String body = dataBeen.getBody();
@@ -180,8 +200,9 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         Object Actual = APIUtil.parseExpectedField(dataBeen.getExpectedField(), standardBeen);
         Assert.assertEquals(Actual.toString(), dataBeen.getExpectedValue());
     }
+
     //获取最近一年的随机时间
-    private String radomDate(){
+    private String radomDate() {
         long time = RandomUtils.nextLong(1552807590000l, 1584429990073l);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         return df.format(time);// new Date()为获取当前系统时间，也可使用当前时间戳
@@ -305,6 +326,7 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         DataBeen dataBeen = appDao.findByTag("saveFinanceInfo");
         HttpPost httpPost = APIUtil.createHttpPost(dataBeen.getUrl());
         String body = dataBeen.getBody();
+        System.out.println("saveFinanceInfoBody:" + body);
         SaveFinanceInfoBody saveFinanceInfoBody = JSON.parseObject(body, SaveFinanceInfoBody.class);
 //        familyFinanceInfo.userId
         saveFinanceInfoBody.getFamilyFinanceInfo().setUserId(userId);
@@ -403,6 +425,7 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
 
     /**
      * &#x6279;&#x91cf;&#x4e0a;&#x4f20;&#x6295;&#x4fdd;&#x8ba2;&#x5355;
+     *
      * @return
      */
     private String batchOrder() {
@@ -501,6 +524,7 @@ public class TestNGDemo extends AbstractTestNGSpringContextTests {
         String body = dataBeen.getBody();
         ManualAddAppointmentBeen manualAddAppointmentBeen = JSON.parseObject(body, ManualAddAppointmentBeen.class);
         manualAddAppointmentBeen.setMobile(ChineseMobileNumberGenerator.getInstance().generate());
+//        manualAddAppointmentBeen.setMobile("18565667852");
         Object json = JSON.toJSONString(manualAddAppointmentBeen, SerializerFeature.WriteMapNullValue);
         APIUtil.setBody(json.toString(), httpPost);
         CloseableHttpResponse httpResponse = APIUtil.exec(httpPost);

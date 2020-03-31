@@ -6,7 +6,7 @@ import org.testng.Reporter;
 
 /**
  * @author carson
- * @ClassName RetryAnalyzer
+ * @ClassName UIRetryAnalyzer
  * @Description 用于设置失败重试
  * @date 2020/3/12
  **/
