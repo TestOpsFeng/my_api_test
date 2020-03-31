@@ -75,9 +75,7 @@ public class UIExtentTestNGIReporterListener implements IReporter {
                 if (result.getThrowable() != null) {
                     //失败则输出到报表
                     test.log(status, result.getThrowable());
-//                    System.out.println("report: " + result.getThrowable().getMessage());
-                    String error_png_path = System.getProperty("user.dir").replace('\\', '/')
-                            + "/logs/extend-report/error-png/error.png";
+                    String error_png_path = "./error-png/error.png";
                     test.log(status, "报错截图如下,点击放大:" + test.addScreenCapture(error_png_path));
                 }
 
