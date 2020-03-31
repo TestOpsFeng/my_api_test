@@ -12,9 +12,10 @@ import org.testng.ITestResult;
 public class UIRetryAnalyzer implements IRetryAnalyzer {
     int counter = 0;
     //重试的次数
-    int retryLimit = 2;
+    int retryLimit = 0;
     private static final Logger logger = LogManager.getLogger(ResolverUtil.Test.class.getName());
 
+    @Override
     public boolean retry(ITestResult result) {
         if(counter < retryLimit)
         {
@@ -31,4 +32,5 @@ public class UIRetryAnalyzer implements IRetryAnalyzer {
         }
         return false;
     }
+
 }

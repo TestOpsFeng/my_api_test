@@ -4,4 +4,7 @@
     <select id="findByTag" resultType="top.testops.my_api_test.dao.been.DataBeen">
         SELECT * FROM `api_test` WHERE tag = #{tag} AND isRun = 1;
     </select>
+    <select id="findUIByTag" resultType="top.testops.my_api_test.dao.been.UIDataBeen">
+        SELECT * FROM `ui_test` WHERE tag = #{tag} AND isRun = 1;
+    </select>
 </mapper>

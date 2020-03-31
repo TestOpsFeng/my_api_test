@@ -1,23 +1,51 @@
 package top.testops.my_ui_test;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
+import top.testops.my_api_test.MyApiTestApplication;
+import top.testops.my_api_test.dao.AppDao;
+import top.testops.my_api_test.dao.been.StandardBeen;
+import top.testops.my_api_test.dao.been.UIDataBeen;
+import top.testops.my_ui_test.listen.MyWebDriverEventListener;
 import top.testops.my_ui_test.listen.UIAnnotationTransformer;
 import top.testops.my_ui_test.listen.UIExtentTestNGIReporterListener;
 import top.testops.my_ui_test.page.LoginPage;
+import top.testops.utils.APIUtil;
 
-@Listeners({UIAnnotationTransformer.class, UIExtentTestNGIReporterListener.class})
-public abstract class BaseSetup {
+@SpringBootTest(classes = MyApiTestApplication.class)
+@Listeners({UIExtentTestNGIReporterListener.class})
+public class BaseSetup extends AbstractTestNGSpringContextTests {
+
     protected WebDriver driver;
 
-    @BeforeClass
+    @Autowired
+    protected AppDao appDao;
+
+
+        @BeforeClass
     public void setupClass() {
-        this.driver = new ChromeDriver(initChromOptions());
+        driver = new EventFiringWebDriver(new ChromeDriver(initChromOptions())).register(new MyWebDriverEventListener());
+//        this.driver = new ChromeDriver(initChromOptions());
         this.initPage();
+        this.interfaceLogin();
+    }
+
+    private void interfaceLogin() {
+        UIDataBeen login = appDao.findUIByTag("login");
+        HttpPost httpPost = APIUtil.createHttpPost(login.getUrl());
+        APIUtil.setBody(login.getBody(), httpPost);
+        CloseableHttpResponse httpResponse = APIUtil.exec(httpPost);
+        StandardBeen standardBeen = APIUtil.parseResponse(httpResponse, StandardBeen.class);
     }
 
     @AfterClass
@@ -31,7 +59,7 @@ public abstract class BaseSetup {
 
     private void initPage() {
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login("liangrongfeng","123456");
+        loginPage.login("liangrongfeng", "123456");
     }
 
 

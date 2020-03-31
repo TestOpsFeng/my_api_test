@@ -7,7 +7,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Reporter;
-
+import org.apache.commons.io.FileUtils;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -257,6 +258,20 @@ public abstract class BasePage {
         }
     }
 
+//    /**
+//     * 保存截图
+//     */
+//    public void saveScreenCapture(String name) {
+//        String path = System.getProperty("user.dir") + "/logs/extend-report/" + name + ".png";
+//        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+//        try {
+//            //复制内容到指定文件中
+//            FileUtils.copyFile(scrFile, new File(path));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     /**
      * 等待loading，避免selenium行为被拦截
      *
@@ -323,10 +338,16 @@ public abstract class BasePage {
      * @return
      */
     public String getText(By by) {
-        WebElement webElement = this.findElementWithTimeout(by);
-       logger.info(this.getClass().getSimpleName() + ": Get Text in element: " + by.toString());
-        return webElement.getText();
+        String text = this.findElementWithTimeout(by).getText();
+        logger.info(this.getClass().getSimpleName() + ": Get Text 『"+text+"』 in element: " + by.toString());
+        return text;
     }
+    public String getText(WebElement element) {
+        String text = element.getText();
+        logger.info(this.getClass().getSimpleName() + ": Get Text 『"+text+"』 in element");
+        return text;
+    }
+
 
     public void ExecJs(String js) {
         JavascriptExecutor executor = (JavascriptExecutor) driver;

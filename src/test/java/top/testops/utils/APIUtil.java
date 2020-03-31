@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
+import com.jayway.jsonpath.JsonPath;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -139,9 +140,22 @@ public class APIUtil {
         }
         return null;
     }
+    public static <T> T parseJsonForValue(CloseableHttpResponse httpResponse, String jsonPath){
+        T returnValue = null;
+        try {
+            String result = EntityUtils.toString(httpResponse.getEntity());
+            log.info("Response: " + result);
+            returnValue = JsonPath.read(result, jsonPath);
+            log.info("InterfaceValue: " + returnValue);
+            return returnValue;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnValue;
+    }
 
 
-
+    //不需要自己实现，使用JsonPath
     public static Object parseExpectedField(String field, Object standardBeen) {
         JSONObject jsonObject = (JSONObject) JSON.toJSON(standardBeen);
         String[] split = field.split("\\.");
